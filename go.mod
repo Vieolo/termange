@@ -1,3 +1,3 @@
-module gihtub.com/vieolo/terminal-utils
+module github.com/vieolo/terminal-utils
 
 go 1.19
