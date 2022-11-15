@@ -1,7 +1,7 @@
 package terminalutils
 
 import (
-	"log"
+	"fmt"
 	"strings"
 )
 
@@ -22,7 +22,7 @@ func PaintText(text string, color string) string {
 }
 
 func PrintColorln(text string, color string) {
-	log.Println(PaintText(text, color))
+	fmt.Println(PaintText(text, color))
 }
 
 func PrintSuccess(text string) {
