@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Creates an text input and returns the input
 func TextInput(prompt string) string {
 	var value string
 	p := prompt
