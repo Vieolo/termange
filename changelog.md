@@ -1,5 +1,8 @@
 # Change Log
 
+## v0.1.2 (2022-11-17)
+- Fixed the `TextInput` when the text was mistaken for terminal commands
+
 ## v0.1.1 (2022-11-17)
 - Fixed the accessibility of the colors in `log`
 
