@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	red    = "red"
-	green  = "green"
-	yellow = "yellow"
+	Red    = "red"
+	Green  = "green"
+	Yellow = "yellow"
 )
 
 // Adds color to the given text
@@ -17,11 +17,11 @@ func PaintText(text string, color string) string {
 	redC := "\033[31m"
 	greenC := "\033[32m"
 	yellowC := "\033[33m"
-	if strings.ToLower(color) == red {
+	if strings.ToLower(color) == Red {
 		return redC + text + reset
-	} else if strings.ToLower(color) == green {
+	} else if strings.ToLower(color) == Green {
 		return greenC + text + reset
-	} else if strings.ToLower(color) == yellow {
+	} else if strings.ToLower(color) == Yellow {
 		return yellowC + text + reset
 	}
 
@@ -33,12 +33,12 @@ func PrintColorln(text string, color string) {
 	fmt.Println(PaintText(text, color))
 }
 
-// Prints a new line with the color green
+// Prints a new line with the color Green
 func PrintSuccess(text string) {
 	PrintColorln(text, "green")
 }
 
-// Prints a new line with the color red
+// Prints a new line with the color Red
 func PrintError(text string) {
 	PrintColorln(text, "red")
 }
