@@ -1,6 +1,6 @@
 module github.com/vieolo/terminal-utils
 
-go 1.19
+go 1.20
 
 require github.com/manifoldco/promptui v0.9.0
 
