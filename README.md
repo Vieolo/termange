@@ -1,4 +1,4 @@
-# Terminal Utils (v0.1.3)
+# Terminal Utils (v0.2.0)
 Utility functions and tools for terminal interaction
 
 ## TUI Components
