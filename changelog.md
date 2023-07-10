@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.2.0 (2023-07-10)
+- Updated the `Select`
+
+#### Breaking Changes
+- The arguments and return types of `Select` are changed
+
 ## v0.1.3 (2023-02-04)
 - Added `Select`
 
