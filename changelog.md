@@ -1,5 +1,8 @@
 # Change Log
 
+## v0.2.1 (2023-09-05)
+- Added the command utils
+
 ## v0.2.0 (2023-07-10)
 - Updated the `Select`
 
