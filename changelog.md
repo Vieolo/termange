@@ -1,5 +1,8 @@
 # Change Log
 
+## v0.2.2 (2024-04-03)
+- Added `Table`
+
 ## v0.2.1 (2023-09-05)
 - Added the command utils
 

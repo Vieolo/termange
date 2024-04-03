@@ -51,18 +51,18 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	fmt.Fprint(w, fn(str))
 }
 
-type model struct {
+type selectModel struct {
 	list          list.Model
 	choice        string
 	quitting      bool
 	SelectOptions SelectOptions
 }
 
-func (m model) Init() tea.Cmd {
+func (m selectModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m selectModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.list.SetWidth(msg.Width)
@@ -96,7 +96,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m model) View() string {
+func (m selectModel) View() string {
 	if m.choice != "" && m.SelectOptions.SelectMessage != nil {
 		return quitTextStyle.Render(m.SelectOptions.SelectMessage(string(m.choice)))
 	}
@@ -131,10 +131,10 @@ func Select(options SelectOptions) (string, error) {
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 
-	m := model{
+	m := selectModel{
 		list:          l,
 		SelectOptions: options,
 	}
 	v, err := tea.NewProgram(m).Run()
-	return v.(model).choice, err
+	return v.(selectModel).choice, err
 }
