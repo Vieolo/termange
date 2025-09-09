@@ -1,4 +1,4 @@
-# Terminal Utils (v0.2.1)
+# Termange
 Utility functions and tools for terminal interaction
 
 ## TUI Components

@@ -1,6 +1,6 @@
-module github.com/vieolo/terminal-utils
+module github.com/vieolo/termange
 
-go 1.20
+go 1.25.1
 
 require (
 	github.com/charmbracelet/bubbles v0.16.1
