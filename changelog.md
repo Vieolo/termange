@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.3.0 (2025-09-09)
+
+#### Breaking Changes
+- Renamed the package to `termange`
+
 ## v0.2.2 (2024-04-03)
 - Added `Table`
 

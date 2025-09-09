@@ -1,4 +1,4 @@
-package terminalutils
+package termange
 
 import (
 	"bytes"
