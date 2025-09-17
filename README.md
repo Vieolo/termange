@@ -1,4 +1,7 @@
 # Termange
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/vieolo/termange.svg)](https://pkg.go.dev/github.com/vieolo/termange)
+
 Utility functions and tools for terminal interaction
 
 ## TUI Components
