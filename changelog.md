@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.4.0 (2025-09-17)
+- Added support for filtering in `Select`
+
+#### Breaking Changes
+- Moved the `Select` and `TextInput` to `tui` sub module
+- Changed the function arguments of `TextInput` to instance of `TextInputOptions`
+
 ## v0.3.0 (2025-09-09)
 
 #### Breaking Changes
