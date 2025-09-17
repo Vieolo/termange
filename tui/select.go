@@ -1,4 +1,4 @@
-package termange
+package tui
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ var (
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
 	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
 	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
-	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
+	quitTextStyle     = lipgloss.NewStyle().Margin(0, 0, 1, 0)
 )
 
 type SelectItem string
@@ -107,10 +107,12 @@ func (m selectModel) View() string {
 }
 
 type SelectOptions struct {
-	Title         string
-	Items         []SelectItem
-	SelectMessage func(string) string
-	QuitMessage   string
+	Title           string
+	Items           []SelectItem
+	SelectMessage   func(string) string
+	QuitMessage     string
+	ShowStatusBar   bool
+	EnableFiltering bool
 }
 
 func Select(options SelectOptions) (string, error) {
@@ -125,8 +127,22 @@ func Select(options SelectOptions) (string, error) {
 
 	l := list.New(listItems, itemDelegate{}, defaultWidth, listHeight)
 	l.Title = options.Title
-	l.SetShowStatusBar(false)
-	l.SetFilteringEnabled(false)
+	l.SetShowStatusBar(options.ShowStatusBar)
+	l.SetFilteringEnabled(options.EnableFiltering)
+	if options.EnableFiltering {
+		l.Filter = func(s1 string, s2 []string) []list.Rank {
+			filtered := []list.Rank{}
+
+			for i, f := range options.Items {
+				fLower := strings.ToLower(string(f))
+				sLower := strings.ToLower(s1)
+				if strings.Contains(fLower, sLower) {
+					filtered = append(filtered, list.Rank{Index: i, MatchedIndexes: []int{}})
+				}
+			}
+			return filtered
+		}
+	}
 	l.Styles.Title = titleStyle
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle

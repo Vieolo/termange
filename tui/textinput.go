@@ -1,4 +1,4 @@
-package termange
+package tui
 
 import (
 	"bufio"
@@ -7,11 +7,16 @@ import (
 	"strings"
 )
 
+type TextInputOptions struct {
+	// The question/info to the user on what they should enter
+	Prompt string
+}
+
 // Creates an text input and returns the input
-func TextInput(prompt string) string {
-	p := prompt
-	if !strings.Contains(p, ": ") {
-		p = prompt + ": "
+func TextInput(options TextInputOptions) string {
+	p := options.Prompt
+	if !strings.HasSuffix(p, " ") {
+		p = options.Prompt + " "
 	}
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(p)
