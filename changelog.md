@@ -1,5 +1,13 @@
 # Change Log
 
+## v0.5.0 (2025-10-01)
+- Added support for `*Printf` functions
+- Added print functions for warning and info
+
+#### Breaking Changes
+- Changed the type of the colors from normal string to `Color`
+- Changed the `*Print` functions to `*Println` functions to better reflect the `fmt`
+
 ## v0.4.0 (2025-09-17)
 - Added support for filtering in `Select`
 
