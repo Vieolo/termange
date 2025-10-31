@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.5.1 (2025-10-31)
+- Added the `Confirm` TUI component
+- Added post input callback for `TextInput`
+
 ## v0.5.0 (2025-10-01)
 - Added support for `*Printf` functions
 - Added print functions for warning and info
