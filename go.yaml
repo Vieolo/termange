@@ -1,0 +1,7 @@
+name: termange
+description: Terminal utility functions
+version: 0.6.0
+
+# commands:
+#   build: go build main.go
+#   test: go test
