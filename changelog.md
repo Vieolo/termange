@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.6.0 (2025-12-03)
+- Added `go.yaml` for the project
+- Added the ability to print start text before running a command
+
+#### Breaking Changes
+- Changed the return value of `RunCommand` functions. Instead of returning a generic error value and two buffers (which were confusing), `RunCommand` functions return `CommandResult` containing stdout and stderr, and `CommandError` which provides a typed struct for the errors
+
 ## v0.5.1 (2025-10-31)
 - Added the `Confirm` TUI component
 - Added post input callback for `TextInput`
