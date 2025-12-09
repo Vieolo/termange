@@ -28,6 +28,16 @@ type CommandResult struct {
 }
 
 // Runs the command and returns the stdout and strerr
+//
+// Args:
+//   - config: an instance of CommandConfig
+//
+// Returns:
+//   - Instance of CommandResult
+//   - error
+//
+// Errors:
+//   - *exec.ExitError: when the command starts but does not complete successfully
 func RunCommand(config CommandConfig) (CommandResult, error) {
 	// Creating the command
 	c := exec.Command(config.Command, config.Args...)
@@ -49,33 +59,33 @@ func RunCommand(config CommandConfig) (CommandResult, error) {
 	// Printing the start text
 	if config.HasStartText() {
 		PrintInfoln(config.StartText)
+
+		// Clearing the start text after the command is run
+		if config.ClearStartText {
+			defer internal.IT{}.CursorUp().ClearLine()
+		}
 	}
 
 	// Running the command
 	cErr := c.Run()
 
-	// Clearing the start text after the command is run
-	if config.ClearStartText && config.HasStartText() {
-		internal.IT{}.CursorUp().ClearLine()
-	}
-
-	// Preparing the result
-	result := CommandResult{
+	return CommandResult{
 		Stdout: sout,
 		Stderr: stderr,
-	}
-
-	// Type conversion of the error (if applicable)
-	// and add it to the result
-	//
-	// One of the error types returned is `*ExitError` which is given
-	// when the command starts but does not complete successfully
-	return result, cErr
+	}, cErr
 }
 
 // Runs a raw command without the need to break it down into different parts
 //
-// It returns the stdout and stderr
+// Args:
+//   - command: the raw command to be run
+//
+// Returns:
+//   - Instance of CommandResult
+//   - error
+//
+// Errors:
+//   - *exec.ExitError: when the command starts but does not complete successfully
 func RunRawCommand(command string) (CommandResult, error) {
 	return RunCommand(CommandConfig{
 		Command: "sh",
