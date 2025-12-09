@@ -2,7 +2,6 @@ package termange
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -28,17 +27,8 @@ type CommandResult struct {
 	Stderr bytes.Buffer // stderr of the command
 }
 
-type CommandError struct {
-	RawError  error
-	ExitError *exec.ExitError // exit error, returned when command starts but does not complete successfully
-}
-
-func (c CommandError) Error() string {
-	return c.RawError.Error()
-}
-
 // Runs the command and returns the stdout and strerr
-func RunCommand(config CommandConfig) (CommandResult, *CommandError) {
+func RunCommand(config CommandConfig) (CommandResult, error) {
 	// Creating the command
 	c := exec.Command(config.Command, config.Args...)
 
@@ -80,24 +70,13 @@ func RunCommand(config CommandConfig) (CommandResult, *CommandError) {
 	//
 	// One of the error types returned is `*ExitError` which is given
 	// when the command starts but does not complete successfully
-	if cErr != nil {
-		ce := CommandError{}
-		ce.RawError = cErr
-
-		var exitError *exec.ExitError
-		if errors.As(cErr, &exitError) {
-			ce.ExitError = exitError
-		}
-		return result, &ce
-	}
-
-	return result, nil
+	return result, cErr
 }
 
 // Runs a raw command without the need to break it down into different parts
 //
 // It returns the stdout and stderr
-func RunRawCommand(command string) (CommandResult, *CommandError) {
+func RunRawCommand(command string) (CommandResult, error) {
 	return RunCommand(CommandConfig{
 		Command: "sh",
 		Args: []string{
