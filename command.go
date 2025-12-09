@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/vieolo/termange/internal"
 )
@@ -23,8 +24,11 @@ func (c CommandConfig) HasStartText() bool {
 }
 
 type CommandResult struct {
-	Stdout bytes.Buffer // stdout of the command
-	Stderr bytes.Buffer // stderr of the command
+	Stdout     bytes.Buffer // stdout of the command
+	Stderr     bytes.Buffer // stderr of the command
+	RealTime   int64        // The wall clock time in microseconds
+	UserTime   int64        // The user time in microseconds
+	SystemTime int64        // The system time in microseconds
 }
 
 // Runs the command and returns the stdout and strerr
@@ -67,11 +71,15 @@ func RunCommand(config CommandConfig) (CommandResult, error) {
 	}
 
 	// Running the command
+	startTime := time.Now()
 	cErr := c.Run()
 
 	return CommandResult{
-		Stdout: sout,
-		Stderr: stderr,
+		Stdout:     sout,
+		Stderr:     stderr,
+		RealTime:   time.Since(startTime).Microseconds(),
+		UserTime:   c.ProcessState.UserTime().Microseconds(),
+		SystemTime: c.ProcessState.SystemTime().Microseconds(),
 	}, cErr
 }
 
