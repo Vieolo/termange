@@ -2,11 +2,11 @@ package termange
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/vieolo/termange/internal"
 )
@@ -24,21 +24,25 @@ func (c CommandConfig) HasStartText() bool {
 }
 
 type CommandResult struct {
-	Stdout bytes.Buffer // stdout of the command
-	Stderr bytes.Buffer // stderr of the command
-}
-
-type CommandError struct {
-	RawError  error
-	ExitError *exec.ExitError // exit error, returned when command starts but does not complete successfully
-}
-
-func (c CommandError) Error() string {
-	return c.RawError.Error()
+	Stdout     bytes.Buffer // stdout of the command
+	Stderr     bytes.Buffer // stderr of the command
+	RealTime   int64        // The wall clock time in microseconds
+	UserTime   int64        // The user time in microseconds
+	SystemTime int64        // The system time in microseconds
 }
 
 // Runs the command and returns the stdout and strerr
-func RunCommand(config CommandConfig) (CommandResult, *CommandError) {
+//
+// Args:
+//   - config: an instance of CommandConfig
+//
+// Returns:
+//   - Instance of CommandResult
+//   - error
+//
+// Errors:
+//   - *exec.ExitError: when the command starts but does not complete successfully
+func RunCommand(config CommandConfig) (CommandResult, error) {
 	// Creating the command
 	c := exec.Command(config.Command, config.Args...)
 
@@ -59,45 +63,38 @@ func RunCommand(config CommandConfig) (CommandResult, *CommandError) {
 	// Printing the start text
 	if config.HasStartText() {
 		PrintInfoln(config.StartText)
+
+		// Clearing the start text after the command is run
+		if config.ClearStartText {
+			defer internal.IT{}.CursorUp().ClearLine()
+		}
 	}
 
 	// Running the command
+	startTime := time.Now()
 	cErr := c.Run()
 
-	// Clearing the start text after the command is run
-	if config.ClearStartText && config.HasStartText() {
-		internal.IT{}.CursorUp().ClearLine()
-	}
-
-	// Preparing the result
-	result := CommandResult{
-		Stdout: sout,
-		Stderr: stderr,
-	}
-
-	// Type conversion of the error (if applicable)
-	// and add it to the result
-	//
-	// One of the error types returned is `*ExitError` which is given
-	// when the command starts but does not complete successfully
-	if cErr != nil {
-		ce := CommandError{}
-		ce.RawError = cErr
-
-		var exitError *exec.ExitError
-		if errors.As(cErr, &exitError) {
-			ce.ExitError = exitError
-		}
-		return result, &ce
-	}
-
-	return result, nil
+	return CommandResult{
+		Stdout:     sout,
+		Stderr:     stderr,
+		RealTime:   time.Since(startTime).Microseconds(),
+		UserTime:   c.ProcessState.UserTime().Microseconds(),
+		SystemTime: c.ProcessState.SystemTime().Microseconds(),
+	}, cErr
 }
 
 // Runs a raw command without the need to break it down into different parts
 //
-// It returns the stdout and stderr
-func RunRawCommand(command string) (CommandResult, *CommandError) {
+// Args:
+//   - command: the raw command to be run
+//
+// Returns:
+//   - Instance of CommandResult
+//   - error
+//
+// Errors:
+//   - *exec.ExitError: when the command starts but does not complete successfully
+func RunRawCommand(command string) (CommandResult, error) {
 	return RunCommand(CommandConfig{
 		Command: "sh",
 		Args: []string{
