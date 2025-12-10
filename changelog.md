@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.7.0 (2025-12-10)
+- Added real, user, and system times to the `RunCommand` result
+
+#### Breaking Changes
+- Fixed the return error type of `RunCommand` functions
+
 ## v0.6.0 (2025-12-03)
 - Added `go.yaml` for the project
 - Added the ability to print start text before running a command
