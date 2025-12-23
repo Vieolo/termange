@@ -1,55 +1,67 @@
 package cursor
 
 import (
+	"bytes"
 	"fmt"
-
-	"github.com/vieolo/termange/internal"
+	"strconv"
+	"strings"
 )
 
 // The Cursor struct
 // This struct has no field, can be used for its functions
 type Cursor struct{}
 
-// Moves the cursor up n times
-func (c Cursor) MoveUp(n int) Cursor {
-	for range n {
-		fmt.Print(internal.CursorUp)
+// Receives a list of Ansi codes and print
+// them to the terminal, effectively apply
+// the ANSI codes to the terminal
+func (c Cursor) Print(codes ...Ansi) {
+	b := bytes.Buffer{}
+	for _, v := range codes {
+		b.Write([]byte(v))
 	}
-	return c
+	fmt.Print(b.String())
 }
 
-// Moves the cursor down n times
-func (c Cursor) MoveDown(n int) Cursor {
-	for range n {
-		fmt.Print(internal.CursorDown)
-	}
-	return c
+// Moves the cursor up, as given in `lineUp`, clear
+// it and restore the cursor to its original position
+func (c Cursor) ClearPreviousLine(lineUp int) {
+	c.Print(
+		AnsiSaveCursor,
+		c.ANSIToMoveUp(lineUp),
+		AnsiClearLine,
+		AnsiRestoreCursor,
+	)
 }
 
-// Moves the cursor right n times
-func (c Cursor) MoveRight(n int) Cursor {
-	for range n {
-		fmt.Print(internal.CursorRight)
-	}
-	return c
+// Moves the cursor up, as given in `lineUp`, clear
+// it and replace it with the given replacement
+func (c Cursor) ReplaceLine(lineUp int, replacement string) {
+	c.Print(
+		AnsiSaveCursor,
+		c.ANSIToMoveUp(lineUp),
+		AnsiClearLine,
+		AnsiCursorToColumn0,
+		Ansi(replacement),
+		AnsiRestoreCursor,
+	)
 }
 
-// Moves the cursor left n times
-func (c Cursor) MoveLeft(n int) Cursor {
-	for range n {
-		fmt.Print(internal.CursorLeft)
-	}
-	return c
+// returns the ANSI code to move the cursor up n times
+func (c Cursor) ANSIToMoveUp(n int) Ansi {
+	return Ansi(strings.Replace(AnsiCursorUp, "1", strconv.Itoa(n), 1))
 }
 
-// Moves the cursor to the start of the line
-func (c Cursor) MoveToLineStart() Cursor {
-	fmt.Print(internal.CursorToColumn0)
-	return c
+// returns the ANSI code to move the cursor down n times
+func (c Cursor) ANSIToMoveDown(n int) Ansi {
+	return Ansi(strings.Replace(AnsiCursorDown, "1", strconv.Itoa(n), 1))
 }
 
-// Clears the current line
-func (c Cursor) ClearLine() Cursor {
-	fmt.Print(internal.ClearLine)
-	return c
+// returns the ANSI code to move the cursor right n times
+func (c Cursor) MoveRight(n int) Ansi {
+	return Ansi(strings.Replace(AnsiCursorRight, "1", strconv.Itoa(n), 1))
+}
+
+// returns the ANSI code to move the cursor left n times
+func (c Cursor) MoveLeft(n int) Ansi {
+	return Ansi(strings.Replace(AnsiCursorLeft, "1", strconv.Itoa(n), 1))
 }
