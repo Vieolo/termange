@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/vieolo/termange/internal"
+	"github.com/vieolo/termange/cursor"
 )
 
 type TextInputOptions struct {
@@ -34,8 +34,8 @@ func TextInput(options TextInputOptions) string {
 	finalValue := strings.TrimRight(text, "\n")
 
 	if options.PostValuePrint != nil {
-		internal.IT{}.
-			CursorUp().
+		cursor.Cursor{}.
+			MoveUp(1).
 			ClearLine()
 
 		fmt.Println(options.PostValuePrint(finalValue))

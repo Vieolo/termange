@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/vieolo/termange/internal"
+	"github.com/vieolo/termange/cursor"
 )
 
 type ConfirmOptions struct {
@@ -30,8 +30,8 @@ func Confirm(options ConfirmOptions) bool {
 	value := answer == "yes" || answer == "y"
 
 	if options.PostConfirmationPrint != nil {
-		internal.IT{}.
-			CursorUp().
+		cursor.Cursor{}.
+			MoveUp(1).
 			ClearLine()
 
 		fmt.Println(options.PostConfirmationPrint(value))
