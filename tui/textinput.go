@@ -34,11 +34,7 @@ func TextInput(options TextInputOptions) string {
 	finalValue := strings.TrimRight(text, "\n")
 
 	if options.PostValuePrint != nil {
-		cursor.Cursor{}.
-			MoveUp(1).
-			ClearLine()
-
-		fmt.Println(options.PostValuePrint(finalValue))
+		cursor.Cursor{}.ReplaceLine(1, options.PostValuePrint(finalValue))
 	}
 
 	return finalValue

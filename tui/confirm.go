@@ -1,7 +1,6 @@
 package tui
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/vieolo/termange/cursor"
@@ -30,11 +29,7 @@ func Confirm(options ConfirmOptions) bool {
 	value := answer == "yes" || answer == "y"
 
 	if options.PostConfirmationPrint != nil {
-		cursor.Cursor{}.
-			MoveUp(1).
-			ClearLine()
-
-		fmt.Println(options.PostConfirmationPrint(value))
+		cursor.Cursor{}.ReplaceLine(1, options.PostConfirmationPrint(value))
 	}
 
 	return value

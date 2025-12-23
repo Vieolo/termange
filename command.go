@@ -66,7 +66,7 @@ func RunCommand(config CommandConfig) (CommandResult, error) {
 
 		// Clearing the start text after the command is run
 		if config.ClearStartText {
-			defer cursor.Cursor{}.MoveUp(1).ClearLine()
+			defer cursor.Cursor{}.ClearPreviousLine(1)
 		}
 	}
 
