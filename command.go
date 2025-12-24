@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/vieolo/termange/internal"
+	"github.com/vieolo/termange/cursor"
 )
 
 type CommandConfig struct {
@@ -66,7 +66,7 @@ func RunCommand(config CommandConfig) (CommandResult, error) {
 
 		// Clearing the start text after the command is run
 		if config.ClearStartText {
-			defer internal.IT{}.CursorUp().ClearLine()
+			defer cursor.Cursor{}.ClearPreviousLine(1)
 		}
 	}
 

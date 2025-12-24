@@ -1,10 +1,9 @@
 package tui
 
 import (
-	"fmt"
 	"strings"
 
-	"github.com/vieolo/termange/internal"
+	"github.com/vieolo/termange/cursor"
 )
 
 type ConfirmOptions struct {
@@ -30,11 +29,7 @@ func Confirm(options ConfirmOptions) bool {
 	value := answer == "yes" || answer == "y"
 
 	if options.PostConfirmationPrint != nil {
-		internal.IT{}.
-			CursorUp().
-			ClearLine()
-
-		fmt.Println(options.PostConfirmationPrint(value))
+		cursor.Cursor{}.ReplaceLine(1, options.PostConfirmationPrint(value))
 	}
 
 	return value
