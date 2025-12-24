@@ -1,5 +1,8 @@
 # Change Log
 
+## v0.7.1 (2025-12-24)
+- Added the `cursor` for movement of the cursor in terminal and manipulation of the lines in terminal
+
 ## v0.7.0 (2025-12-10)
 - Added real, user, and system times to the `RunCommand` result
 
