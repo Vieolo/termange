@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.8.0 (2026-05-15)
+
+#### Breaking Changes
+- Adjusted the `PrintError` functions to write to stderr instead of stdout. A new set of functions is added in case you would need to write to stdout
+
 ## v0.7.1 (2025-12-24)
 - Added the `cursor` for movement of the cursor in terminal and manipulation of the lines in terminal
 
