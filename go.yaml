@@ -14,7 +14,7 @@ external:
     eager_files: []
   gomore:
     commands:
-      check: python3 agent.py
+      check: go run ./internal/check
       example: go run ./example
       test: go test -race -count=1 ./...
       vet: go vet ./...
