@@ -1,5 +1,30 @@
 # Change Log
 
+## v0.9.0
+- Added the `live` package, to draw a block of lines that is redrawn in place, for progress, spinners and status trees
+- Added `MultiSelect`, to select several items of a list, starting from an initial selection
+- Added `Default` to `ConfirmOptions`, the answer when the user just presses Enter
+- Added `In` and `Out` to `TextInputOptions` and `ConfirmOptions`, to read from and write to other streams than stdin and stdout
+- Added `W` to `cursor.Cursor`, to write to other writers than stdout
+- Added the colors black, blue, magenta and cyan
+- Added the `example` program, which runs each part of termange
+- termange now uses `github.com/vieolo/mansil` for its ANSI codes
+- Fixed `TextInput` losing the lines after the first one when stdin is piped
+- Fixed `TextInput` dropping a last line that has no line ending, such as from `printf y | app`
+- Fixed `TextInput` keeping the `\r` of Windows line endings, which made `Confirm` always answer no on Windows
+- Fixed `PostValuePrint` and `PostConfirmationPrint` replacing the line above the prompt when stdin is piped
+- Fixed `Select` quitting when `q` is typed in the filter
+- Fixed `Select` quitting on esc while a filter is applied. It clears the filter instead
+
+#### Deprecated
+- Deprecated the `Ansi*` constants of `cursor` in favour of the codes of mansil
+
+#### Breaking Changes
+- `Confirm`'s default value is now `false`. This is evident with the prompt (`[y/N]`)
+- `Confirm` now asks again if the provided answer is other than yes, no, or empty. Before, an unknown answer would've been considered to be a no.
+- In `Select`, enter while typing a filter accepts the filter, and a second enter picks the item. Before, the first enter picked the item under the cursor
+- `ANSIToMoveUp`, `ANSIToMoveDown`, `MoveRight` and `MoveLeft` return an empty code for `n <= 0`, so `ClearPreviousLine(0)` and `ReplaceLine(0, ...)` act on the current line. Before, a count of 0 moved by one
+
 ## v0.8.0 (2026-05-15)
 
 #### Breaking Changes
