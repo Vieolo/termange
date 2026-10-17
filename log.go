@@ -4,35 +4,45 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/vieolo/mansil"
 )
 
 type Color string
 
 var (
-	ColorRed    Color = "red"
-	ColorGreen  Color = "green"
-	ColorYellow Color = "yellow"
-	ColorWhite  Color = "white"
+	ColorBlack   Color = "black"
+	ColorRed     Color = "red"
+	ColorGreen   Color = "green"
+	ColorYellow  Color = "yellow"
+	ColorBlue    Color = "blue"
+	ColorMagenta Color = "magenta"
+	ColorCyan    Color = "cyan"
+	ColorWhite   Color = "white" // Bold white
 )
 
-// Adds color to the given text
-func PaintText(text string, color Color) string {
-	reset := "\033[0m"
-	redC := "\033[31m"
-	greenC := "\033[32m"
-	yellowC := "\033[33m"
-	whiteC := "\033[1;37m"
-	if strings.ToLower(string(color)) == string(ColorRed) {
-		return redC + text + reset
-	} else if strings.ToLower(string(color)) == string(ColorGreen) {
-		return greenC + text + reset
-	} else if strings.ToLower(string(color)) == string(ColorYellow) {
-		return yellowC + text + reset
-	} else if strings.ToLower(string(color)) == string(ColorWhite) {
-		return whiteC + text + reset
-	}
+// The ANSI codes of each color
+var colorCodes = map[Color]string{
+	ColorBlack:   mansil.BlackFG,
+	ColorRed:     mansil.RedFG,
+	ColorGreen:   mansil.GreenFG,
+	ColorYellow:  mansil.YellowFG,
+	ColorBlue:    mansil.BlueFG,
+	ColorMagenta: mansil.MagentaFG,
+	ColorCyan:    mansil.CyanFG,
+	ColorWhite:   mansil.Bold + mansil.WhiteFG,
+}
 
-	return text
+// Adds color to the given text.
+// The color is not case sensitive, and an unknown color returns the text unchanged.
+// For the other colors and styles, such as bright colors, backgrounds or
+// underline, use the codes of `github.com/vieolo/mansil`
+func PaintText(text string, color Color) string {
+	code, ok := colorCodes[Color(strings.ToLower(string(color)))]
+	if !ok {
+		return text
+	}
+	return code + text + mansil.Reset
 }
 
 // Prints a new line with the given color
