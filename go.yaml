@@ -1,6 +1,6 @@
 name: termange
 description: Terminal utility functions
-version: 0.8.0
+version: 0.9.0
 external:
   contour:
     # the central store profiles whose rules load eagerly here.
