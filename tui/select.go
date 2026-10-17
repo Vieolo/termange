@@ -5,6 +5,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -23,6 +24,9 @@ var (
 	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
 	quitTextStyle     = lipgloss.NewStyle().Margin(0, 0, 1, 0)
 )
+
+// Picks the item under the cursor in Select, and confirms the selection in MultiSelect
+var confirmKey = key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "confirm"))
 
 type SelectItem string
 
@@ -69,24 +73,29 @@ func (m selectModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case tea.KeyMsg:
-		switch keypress := msg.String(); keypress {
-		case "ctrl+c":
+		if key.Matches(msg, m.list.KeyMap.ForceQuit) {
 			m.quitting = true
 			return m, tea.Quit
+		}
 
-		case "q":
-			m.quitting = true
-			return m, tea.Quit
+		// While the filter is typed, the keys go to the filter
+		if m.list.FilterState() == list.Filtering {
+			break
+		}
 
-		case "esc":
-			m.quitting = true
-			return m, tea.Quit
-
-		case "enter":
+		switch {
+		case key.Matches(msg, confirmKey):
 			i, ok := m.list.SelectedItem().(SelectItem)
 			if ok {
 				m.choice = string(i)
 			}
+			return m, tea.Quit
+
+		// The list clears an applied filter with esc, which is also a quit key
+		case key.Matches(msg, m.list.KeyMap.ClearFilter):
+
+		case key.Matches(msg, m.list.KeyMap.Quit):
+			m.quitting = true
 			return m, tea.Quit
 		}
 	}
@@ -115,8 +124,17 @@ type SelectOptions struct {
 	EnableFiltering bool
 }
 
+// Shows the items and returns the one the user picks with enter.
+//
+// When filtering is enabled, / starts typing a filter, and enter or esc
+// ends it. While the filter is applied, esc clears it. Quitting with q,
+// esc or ctrl+c returns an empty string
 func Select(options SelectOptions) (string, error) {
+	v, err := tea.NewProgram(newSelectModel(options)).Run()
+	return v.(selectModel).choice, err
+}
 
+func newSelectModel(options SelectOptions) selectModel {
 	const defaultWidth = 20
 
 	listItems := []list.Item{}
@@ -147,10 +165,8 @@ func Select(options SelectOptions) (string, error) {
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 
-	m := selectModel{
+	return selectModel{
 		list:          l,
 		SelectOptions: options,
 	}
-	v, err := tea.NewProgram(m).Run()
-	return v.(selectModel).choice, err
 }

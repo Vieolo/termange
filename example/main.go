@@ -59,10 +59,11 @@ func main() {
 	}
 	for {
 		choice, err := tui.Select(tui.SelectOptions{
-			Title:         "termange examples",
-			Items:         items,
-			SelectMessage: func(s string) string { return termange.PaintText("> "+s, termange.ColorCyan) },
-			QuitMessage:   "Bye",
+			Title:           "termange examples",
+			Items:           items,
+			SelectMessage:   func(s string) string { return termange.PaintText("> "+s, termange.ColorCyan) },
+			QuitMessage:     "Bye",
+			EnableFiltering: true,
 		})
 		if err != nil {
 			termange.PrintErrorln(err.Error())

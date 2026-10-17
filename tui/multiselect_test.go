@@ -22,12 +22,12 @@ func runes(s string) tea.KeyMsg {
 }
 
 // Sends the keys to the model, and returns it with the command of the last key
-func press(m multiSelectModel, keys ...tea.KeyMsg) (multiSelectModel, tea.Cmd) {
+func press[M tea.Model](m M, keys ...tea.KeyMsg) (M, tea.Cmd) {
 	var cmd tea.Cmd
 	for _, k := range keys {
 		var next tea.Model
 		next, cmd = m.Update(k)
-		m = next.(multiSelectModel)
+		m = next.(M)
 	}
 	return m, cmd
 }

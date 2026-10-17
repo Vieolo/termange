@@ -33,10 +33,7 @@ type MultiSelectOptions struct {
 	EnableFiltering bool
 }
 
-var (
-	multiSelectToggleKey  = key.NewBinding(key.WithKeys(" "), key.WithHelp("space", "toggle"))
-	multiSelectConfirmKey = key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "confirm"))
-)
+var multiSelectToggleKey = key.NewBinding(key.WithKeys(" "), key.WithHelp("space", "toggle"))
 
 // Shows the items with checkboxes, and returns the selected ones, in the order of Items.
 //
@@ -118,7 +115,7 @@ func newMultiSelectModel(options MultiSelectOptions) multiSelectModel {
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 	l.AdditionalShortHelpKeys = func() []key.Binding {
-		return []key.Binding{multiSelectToggleKey, multiSelectConfirmKey}
+		return []key.Binding{multiSelectToggleKey, confirmKey}
 	}
 	l.AdditionalFullHelpKeys = l.AdditionalShortHelpKeys
 
@@ -153,7 +150,7 @@ func (m multiSelectModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, nil
 
-		case key.Matches(msg, multiSelectConfirmKey):
+		case key.Matches(msg, confirmKey):
 			m.done = true
 			return m, tea.Quit
 
