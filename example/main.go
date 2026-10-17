@@ -33,6 +33,7 @@ var examples = []example{
 	{"logging", logging},
 	{"input", input},
 	{"confirm", confirm},
+	{"multiselect", multiSelect},
 	{"table", tableExample},
 	{"live", liveRegion},
 	{"cursor", cursorExample},
@@ -137,6 +138,26 @@ func confirm() {
 	deleteAll := tui.Confirm(tui.ConfirmOptions{Prompt: "Delete everything?"})
 
 	fmt.Printf("You answered %v and %v\n", like, deleteAll)
+}
+
+// MultiSelect, starting with some items selected
+func multiSelect() {
+	selected, err := tui.MultiSelect(tui.MultiSelectOptions{
+		Title:           "Packages you use",
+		Items:           []tui.SelectItem{"termange", "tui", "live", "cursor", "mansil"},
+		Selected:        []tui.SelectItem{"termange", "tui"},
+		SelectMessage:   func(s []string) string { return "Selected: " + strings.Join(s, ", ") },
+		QuitMessage:     "Canceled, nothing changed",
+		EnableFiltering: true,
+	})
+	if errors.Is(err, tui.ErrCanceled) {
+		return
+	}
+	if err != nil {
+		termange.PrintErrorln(err.Error())
+		return
+	}
+	termange.PrintInfof("You use %d of them\n", len(selected))
 }
 
 // Table, printing the row picked with Enter, until q
